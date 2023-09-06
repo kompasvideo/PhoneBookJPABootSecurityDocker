@@ -1,9 +1,23 @@
+version: '3.8'
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+  phonebook:
+    build: .
+    image: phonebook-1
     ports:
-      - '5432'
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydatabase
+      - DB_NAME=mydatabase
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=secret
+
+  postgres:
+    image: postgres:13.7-alpine
+    ports:
+      - '6541:5432'
+    environment:
+      - POSTGRES_DB=mydatabase
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=myuser
